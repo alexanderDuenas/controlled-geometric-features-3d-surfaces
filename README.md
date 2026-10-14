@@ -7,7 +7,7 @@ This repository provides the public validation package and an independent neutra
 
 ## Graphical abstract
 
-![Graphical abstract](docs/figures/graphical_abstract.png)
+[![Graphical abstract](docs/figures/graphical_abstract.png)](docs/figures/graphical_abstract.png)
 
 ## Contents
 
@@ -162,6 +162,10 @@ src/                         neutral reference implementation
 MANIFEST_SHA256.txt          release integrity hashes
 PACKAGE_CONTENTS.csv         release file inventory and hashes
 ```
+
+### UAV projected examples
+
+[![Representative UAV projected examples](docs/figures/uav_projected_examples.png)](docs/figures/uav_projected_examples.png)
 
 ## 5. Validation gates and expected results
 
