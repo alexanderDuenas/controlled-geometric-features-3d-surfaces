@@ -5,6 +5,10 @@ Reproducibility package accompanying the MethodsX manuscript **Controlled geomet
 
 This repository provides the public validation package and an independent neutral reference implementation of the method. The UAV validation branch is reproduced from frozen packaged inputs; it is not a reconstruction of the complete historical UAV processing chain.
 
+## Graphical abstract
+
+![Graphical abstract](docs/figures/graphical_abstract.png)
+
 ## Contents
 
 - [1. Scope and reproducibility boundary](#1-scope-and-reproducibility-boundary)
