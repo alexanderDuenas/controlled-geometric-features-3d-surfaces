@@ -1,0 +1,75 @@
+$ python run_all.py
+
+==============================================================================
+METHODSX LOCAL REPRODUCTION
+==============================================================================
+
+[GATE 5] View coverage
+bindings       = 480
+observable     = 396
+not observable = 84
+mismatches     = 0
+
+[B] Structural geometry
+features = 40
+stations = 4530
+L/C/R point records = 13590
+
+[C] Frozen reference table
+features = 40
+median delta mm = -1.643130076445232e-14
+max abs delta mm = 1.0231815394945445e-12
+
+[D] Station-level reprojection
+station rows = 45024
+boolean mismatches = 0
+numeric mismatches = 0
+max numeric differences = {'projected_width_px': 8.208544954868557e-12, 'center_u_px': 6.366462912410498e-12, 'center_v_px': 2.2737367544323206e-12, 'left_u_px': 6.366462912410498e-12, 'left_v_px': 2.2737367544323206e-12, 'right_u_px': 7.275957614183426e-12, 'right_v_px': 2.2737367544323206e-12, 'center_depth_camera': 2.4868995751603507e-14, 'left_depth_camera': 2.842170943040401e-14, 'right_depth_camera': 2.842170943040401e-14}
+
+[E] Projected measurand scale
+bindings = 396
+median px = 1.552956209187009
+p10 px = 0.29948880409004663
+p90 px = 8.044744991808816
+min px = 0.23226736116039734
+max px = 11.029519274954795
+
+Projected scale by prescribed width:
+ prescribed_width_mm  feature_n  projected_scale_median_px
+                 2.0          8                   0.302984
+                 5.0          8                   0.772311
+                10.0          8                   1.601579
+                20.0          8                   3.149437
+                50.0          8                   8.201704
+\n[GATE 2] Geometric consistency
+max abs station width delta mm = 3.8186342976587184e-11
+status = PASS
+\n[GATE 4] Reference consistency
+max abs reference delta mm = 1.4708234630234074e-12
+status = PASS
+\n[GATE 3] Lineage completeness
+complete lineages = 40 / 40
+status = PASS
+
+[GATE 1] Identity preservation
+persistent feature IDs = 40
+status = PASS
+
+==============================================================================
+VALIDATION GATES
+==============================================================================
+identity preservation  = PASS
+geometric consistency  = PASS
+lineage completeness   = PASS
+reference consistency  = PASS
+view coverage          = PASS
+
+ADDITIONAL REPRODUCTION/CARACTERIZATION
+station reprojection             = PASS
+binding projected scale summary  = PASS
+
+==============================================================================
+FINAL VERDICT
+==============================================================================
+
+VERDICT = PASS_METHODSX_LOCAL_REPRODUCTION

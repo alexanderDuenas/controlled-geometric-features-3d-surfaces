@@ -1,0 +1,12 @@
+{
+  "station_n": 4040,
+  "camera_n": 12,
+  "binding_n": 480,
+  "feature_n": 40,
+  "feature_population_sources": [
+    "identity_view_bindings",
+    "materialized_geometry"
+  ],
+  "feature_design_file_present": false,
+  "feature_index_created": true
+}

@@ -1,0 +1,135 @@
+{
+  "contract_id": "methodsx_controlled_geometric_features_contract_v1",
+  "contract_version": "1.0",
+  "title": "Controlled geometric features on 3D surfaces with constructed metric reference and auditable lineage",
+  "purpose": "Machine-readable public interface and validation boundary for the MethodsX reproducibility package.",
+  "persistent_identity": {
+    "feature_key": "feature_id",
+    "station_key": [
+      "feature_id",
+      "station_index"
+    ],
+    "feature_view_binding_key": [
+      "feature_id",
+      "image_name"
+    ]
+  },
+  "station_geometry": {
+    "roles": [
+      "left",
+      "center",
+      "right"
+    ],
+    "materialized_width_definition": "1000 * ||R - L||_2",
+    "materialized_width_unit": "mm"
+  },
+  "width_semantics": {
+    "prescribed_width": {
+      "field": "prescribed_width_mm",
+      "level": "design",
+      "unit": "mm"
+    },
+    "materialized_width": {
+      "definition": "1000 * ||R - L||_2",
+      "level": "station",
+      "unit": "mm"
+    },
+    "projected_width": {
+      "definition": "||pi(R) - pi(L)||_2",
+      "level": "station-view",
+      "unit": "px"
+    }
+  },
+  "observability_interface": {
+    "unit": "feature-view binding",
+    "separate_from_station_projection_validity": true,
+    "uav_provider": {
+      "evidence": "released binary feature-view visibility mask",
+      "rule": {
+        "observable": "foreground_pixels > 0",
+        "not_observable": "foreground_pixels == 0"
+      },
+      "historical_mask_generator_reproduced": false
+    },
+    "neutral_provider": {
+      "evidence": "geometric station support",
+      "rule": "observable when the binding contains at least one primary-valid projected station"
+    }
+  },
+  "uav_station_projection_validity": {
+    "requires_positive_camera_depth_for": [
+      "left",
+      "center",
+      "right"
+    ],
+    "requires_finite_projected_coordinates": true,
+    "operational_image_domain": {
+      "u": "0 <= u < width",
+      "v": "0 <= v < height",
+      "width_px": 6144,
+      "height_px": 4096
+    },
+    "finite_positive_projected_width_guard": true
+  },
+  "validation_gates": [
+    {
+      "order": 1,
+      "name": "identity preservation",
+      "scope": "persistent feature identity closure"
+    },
+    {
+      "order": 2,
+      "name": "geometric consistency",
+      "scope": "station-level materialized boundary separation versus prescribed width",
+      "interpretation": "internal materialization-consistency check; not independent surface-accuracy validation"
+    },
+    {
+      "order": 3,
+      "name": "lineage completeness",
+      "scope": "feature-level closure across design, materialized geometry, reference, bindings and observable projected outputs"
+    },
+    {
+      "order": 4,
+      "name": "reference consistency",
+      "scope": "feature-level constructed metric reference versus prescribed width and frozen expected reference",
+      "interpretation": "internal feature-aggregation consistency; not an external metrological reference"
+    },
+    {
+      "order": 5,
+      "name": "view coverage",
+      "scope": "complete 480 feature-view binding population and reproduced mask-based observability states"
+    }
+  ],
+  "additional_characterization": {
+    "projected_scale_is_validation_gate": false,
+    "station_reprojection_is_validation_gate": false
+  },
+  "public_uav_population": {
+    "feature_n": 40,
+    "station_n": 4530,
+    "lcr_point_record_n": 13590,
+    "view_n": 12,
+    "feature_view_binding_n": 480,
+    "observable_binding_n": 396,
+    "not_observable_binding_n": 84,
+    "projected_station_row_n": 45024,
+    "primary_valid_projected_station_n": 44946
+  },
+  "frozen_uav_inputs": [
+    "data/parameterization/feature_design_40.csv",
+    "data/uav_validation/geometry/geometry_lcr_4530.csv",
+    "data/uav_validation/cameras/cameras_12.json",
+    "data/uav_validation/visibility/visibility_manifest_480.csv",
+    "data/uav_validation/visibility/masks/"
+  ],
+  "not_regenerated": [
+    "raw RGB ingestion",
+    "EXIF extraction",
+    "support-surface reconstruction",
+    "historical UAV surface placement/materialization",
+    "historical visibility-mask generation/rasterization",
+    "historical occlusion/coverage processing",
+    "absolute georeferencing"
+  ],
+  "morphology_boundary": "Feature family and associated parameters characterize the design-level centerline. Preservation of prescribed family morphology, curvature or centerline shape after surface placement/materialization is not a validation gate."
+}

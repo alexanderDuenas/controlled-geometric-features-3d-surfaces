@@ -1,0 +1,7 @@
+{
+  "source_frame": "materialized_geometry_local",
+  "target_frame": "camera_projection_frame",
+  "transform_type": "IDENTITY",
+  "absolute_geolocation_included": false,
+  "note": "Only the local frame relation required for reprojection is retained. No GPS, latitude/longitude, EPSG coordinates, or absolute site geolocation are included."
+}

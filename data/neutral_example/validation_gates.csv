@@ -1,0 +1,15 @@
+gate,status,observed
+surface_is_mildly_nonplanar,PASS,"{'z_min_m': -0.0060605799813015435, 'z_max_m': 0.0060605799813015435, 'z_range_m': 0.012121159962603087}"
+feature_identity_n_eq_40,PASS,40
+family_counts_10_each,PASS,"{'straight': 10, 'arc': 10, 'sinusoidal': 10, 'zigzag': 10}"
+width_counts_8_each,PASS,"{2.0: 8, 5.0: 8, 10.0: 8, 20.0: 8, 50.0: 8}"
+two_parameterization_levels_per_family_width,PASS,[2]
+repair_path_length_preserved,PASS,2.7755575615628914e-16
+repair_endpoints_preserved,PASS,0.0
+geometry_equal_L_C_R_counts,PASS,"{'left_border': 4040, 'centerline': 4040, 'right_border': 4040}"
+camera_n_eq_12,PASS,12
+binding_pair_n_eq_480,PASS,480
+pair_projection_row_n_eq_480,PASS,480
+identity_projection_row_n_eq_40,PASS,40
+constructed_reference_identity_n_eq_40,PASS,40
+constructed_reference_matches_materialized_prescribed_on_neutral_surface,PASS,7.105427357601002e-15

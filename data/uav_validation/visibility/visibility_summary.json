@@ -1,0 +1,7 @@
+{
+  "binding_n": 480,
+  "observable_n": 396,
+  "not_observable_n": 84,
+  "manifest_mismatch_n": 0,
+  "rule": "foreground_pixels > 0 => observable; foreground_pixels == 0 => not_observable"
+}
