@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+message: "If you use this reproducibility package, please cite this software and the associated MethodsX article."
+type: software
+title: "Controlled geometric features on 3D surfaces with constructed metric reference and auditable lineage — reproducibility package"
+version: 1.0.0
+repository-code: "https://github.com/alexanderDuenas/controlled-geometric-features-3d-surfaces"
+
+authors:
+  - family-names: "Salazar"
+    given-names: "Alex"
+    orcid: "https://orcid.org/0009-0002-3468-9996"
+    affiliation: "SENAI Institute of Innovation in Embedded Systems; Federal University of Santa Catarina (UFSC)"
+
+  - family-names: "Barbosa"
+    given-names: "Flavio"
+    affiliation: "SENAI Institute of Innovation in Embedded Systems"
+
+  - family-names: "Morona"
+    given-names: "Yan Medeiros"
+    affiliation: "SENAI Institute of Innovation in Embedded Systems; Federal University of Santa Catarina (UFSC)"
+
+  - family-names: "Stemmer"
+    given-names: "Marcelo"
+    affiliation: "Federal University of Santa Catarina (UFSC)"
+
+  - family-names: "Becker"
+    given-names: "Leandro"
+    affiliation: "Federal University of Santa Catarina (UFSC)"
+
+  - family-names: "Loureiro"
+    given-names: "Tiago"
+    affiliation: "Federal University of Santa Catarina (UFSC)"
+
+keywords:
+  - "controlled geometric features"
+  - "3D surfaces"
+  - "computer vision"
+  - "photogrammetry"
+  - "multiview geometry"
+  - "reproducibility"
+  - "UAV"
