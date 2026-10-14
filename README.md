@@ -3,7 +3,7 @@
 
 Reproducibility package accompanying the MethodsX manuscript **Controlled geometric features on 3D surfaces with constructed metric reference and auditable lineage**.
 
-This repository provides the public validation package and an independent neutral reference implementation of the method. The UAV validation branch is reproduced from frozen packaged inputs; it is not a reconstruction of the complete historical UAV processing chain.
+This repository provides the public validation package and an independent neutral reference implementation of the method. The UAV validation branch reproduces the reported validation from frozen packaged inputs, with the public workflow beginning from the materialized geometry, calibrated camera models, and feature-view visibility masks.
 
 ## Graphical abstract
 
@@ -29,7 +29,7 @@ The UAV validation branch starts from four frozen packaged inputs:
 
 From these inputs, the package recomputes the validation gates, feature-view observability, station-level projection and validity, binding-level projected-width summaries, and projected-scale characterization.
 
-The package does **not** rerun historical raw-RGB ingestion, support-surface reconstruction, UAV surface placement/materialization, visibility-mask generation/rasterization, or absolute georeferencing. The 396 observable and 84 not-observable feature-view bindings are reproduced from the frozen masks; the historical rasterization, coverage and occlusion parameters used to generate those masks are not reconstructed from raw imagery.
+The public UAV workflow begins from the frozen materialized geometry, calibrated camera models, and feature-view visibility masks. From these inputs, the package reproduces the 396 observable and 84 not-observable feature-view bindings, while the historical raw-RGB ingestion, support-surface reconstruction, surface placement/materialization, visibility-mask generation/rasterization, absolute georeferencing, and the associated rasterization, coverage, and occlusion parameters remain part of the upstream historical processing chain.
 
 Feature-view observability and station-level projection validity are intentionally separate. For the UAV configuration:
 
@@ -45,7 +45,7 @@ Station validity is evaluated inside observable bindings. A station is primary-v
 0 <= v < 4096
 ```
 
-Historical UAV acquisition filenames are not distributed. Public camera labels are `View_01` through `View_12`. Raw RGB photographs, EXIF records, GPS coordinates, latitude/longitude, EPSG site coordinates and absolute site geolocation are not included.
+Historical UAV acquisition filenames are represented in the public package by the labels `View_01` through `View_12`. The public release focuses on the geometric and validation artifacts required for reproduction, while raw RGB imagery, EXIF metadata, GPS information, latitude/longitude coordinates, EPSG site coordinates, and absolute site geolocation remain part of the upstream acquisition record.
 
 For the method interface and reproduction boundary, see [`METHOD_CONTRACT.md`](METHOD_CONTRACT.md), [`data/method_contract.json`](data/method_contract.json) and [`REPRODUCIBILITY_SCOPE.md`](REPRODUCIBILITY_SCOPE.md).
 
@@ -131,7 +131,7 @@ Run:
 python run_all.py
 ```
 
-The verifier performs the five manuscript validation gates and also recomputes station-level camera projection and projected-scale summaries. The latter are reproduction checks or additional characterization; they are **not** additional validation gates.
+The verifier performs the five manuscript validation gates and also recomputes station-level camera projection and projected-scale summaries. These latter outputs serve as reproduction checks and additional characterization alongside the five validation gates.
 
 The main public inputs are organized as:
 
@@ -193,7 +193,7 @@ Expected public-validation populations are:
 | Projected station rows | 45,024 |
 | Primary-valid projected stations | 44,946 |
 
-Projected measurand scale is reported separately as additional characterization. It is not a sixth validation gate.
+Projected measurand scale is reported separately as additional characterization.
 
 ## 6. Citation, licensing and limitations
 
@@ -212,10 +212,10 @@ See [`LICENSE.md`](LICENSE.md), [`LICENSE-CODE.txt`](LICENSE-CODE.txt) and [`LIC
 
 ### Limitations
 
-- The UAV branch reproduces validation from frozen materialized geometry, calibrated cameras and feature-view visibility masks; it does not regenerate the complete historical UAV processing chain.
-- The 396/84 observability population is exactly reproducible from the packaged masks, but the historical rasterization, coverage and occlusion parameters used to generate those masks are not fully frozen.
-- Surface placement and materialization on a discrete support representation may alter local design-level morphology. The validation gates do not assess preservation of prescribed family morphology, curvature or centerline shape after materialization.
-- Geometric consistency and reference consistency assess the same construction at station and feature-aggregation levels, respectively; they are not independent external geometric or metrological validation.
-- At small projected scales, mask-based observability should not be interpreted as physical image-space resolvability.
+- The public UAV workflow begins from frozen materialized geometry, calibrated cameras, and feature-view visibility masks, while earlier acquisition, reconstruction, placement, and mask-generation stages remain part of the upstream processing chain.
+- The 396 observable and 84 not-observable feature-view bindings are reproduced from the released masks; their interpretation therefore remains tied to the historical rasterization, coverage, and occlusion conventions used to generate those masks.
+- Surface placement and materialization on a discrete support representation may alter local design-level morphology; preservation of prescribed family morphology, curvature, and centerline shape lies outside the present validation gates.
+- Geometric consistency and reference consistency provide internal consistency evidence at station and feature-aggregation levels, respectively, rather than independent external geometric or metrological validation.
+- At very small projected scales, mask-based observability should be interpreted as provider-level observability rather than direct evidence of physical image-space resolvability.
 
 See [`LIMITATIONS.md`](LIMITATIONS.md) for the complete limitation statement.
