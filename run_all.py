@@ -68,9 +68,76 @@ print("=" * 78)
 print("METHODSX LOCAL REPRODUCTION")
 print("=" * 78)
 
-# A. Observability from masks
+# Authoritative feature and camera populations used by Gate 5 and downstream checks
+design = pd.read_csv(DATA / "parameterization" / "feature_design_40.csv")
+design["feature_id"] = design["feature_id"].astype(str)
+design_ids = set(design["feature_id"])
+
+if len(design) != 40 or len(design_ids) != 40:
+    fail(
+        "Expected exactly 40 unique feature IDs in the design catalog"
+    )
+
+camera_obj = json.loads(
+    (
+        DATA
+        / "uav_validation"
+        / "cameras"
+        / "cameras_12.json"
+    ).read_text()
+)
+cams = camera_obj["cameras"]
+camera_names = set(str(name) for name in cams.keys())
+
+if len(cams) != 12 or len(camera_names) != 12:
+    fail("Expected exactly 12 unique cameras")
+
+# A. Gate 5 — exact feature-view coverage and observability reproduction
 vis_dir = DATA / "uav_validation" / "visibility"
 manifest = pd.read_csv(vis_dir / "visibility_manifest_480.csv")
+manifest["feature_id"] = manifest["feature_id"].astype(str)
+manifest["image_name"] = manifest["image_name"].astype(str)
+
+expected_pairs = {
+    (feature_id, image_name)
+    for feature_id in design_ids
+    for image_name in camera_names
+}
+
+manifest_pair_rows = list(
+    map(
+        tuple,
+        manifest[
+            ["feature_id", "image_name"]
+        ].itertuples(index=False, name=None),
+    )
+)
+manifest_pairs = set(manifest_pair_rows)
+
+duplicate_pair_n = len(manifest_pair_rows) - len(manifest_pairs)
+missing_pairs = expected_pairs - manifest_pairs
+extra_pairs = manifest_pairs - expected_pairs
+
+if len(expected_pairs) != 480:
+    fail(
+        "Expected feature-view Cartesian product is not 480 bindings"
+    )
+
+if (
+    len(manifest) != 480
+    or duplicate_pair_n != 0
+    or missing_pairs
+    or extra_pairs
+):
+    fail(
+        "Feature-view coverage mismatch: "
+        f"rows={len(manifest)}, "
+        f"unique_pairs={len(manifest_pairs)}, "
+        f"duplicates={duplicate_pair_n}, "
+        f"missing={len(missing_pairs)}, "
+        f"extra={len(extra_pairs)}"
+    )
+
 vis_rows = []
 for _, r in manifest.iterrows():
     p = vis_dir / r["mask_file"]
@@ -86,20 +153,46 @@ for _, r in manifest.iterrows():
         "image_name": str(r["image_name"]),
         "foreground_pixels": n,
         "observability_status": status,
-        "manifest_match": n == int(r["foreground_pixels"]) and status == r["observability_status"],
+        "manifest_match": (
+            n == int(r["foreground_pixels"])
+            and status == r["observability_status"]
+        ),
     })
+
 vis = pd.DataFrame(vis_rows)
 obs_n = int((vis["observability_status"] == "observable").sum())
 non_n = int((vis["observability_status"] == "not_observable").sum())
 vis_mismatch = int((~vis["manifest_match"]).sum())
+
 print("\n[GATE 5] View coverage")
-print("bindings       =", len(vis))
-print("observable     =", obs_n)
-print("not observable =", non_n)
-print("mismatches     =", vis_mismatch)
-if len(vis) != 480 or obs_n != 396 or non_n != 84 or vis_mismatch != 0:
+print("design features =", len(design_ids))
+print("cameras         =", len(camera_names))
+print("expected pairs  =", len(expected_pairs))
+print("manifest rows   =", len(manifest))
+print("unique pairs    =", len(manifest_pairs))
+print("duplicate pairs =", duplicate_pair_n)
+print("missing pairs   =", len(missing_pairs))
+print("extra pairs     =", len(extra_pairs))
+print("observable      =", obs_n)
+print("not observable  =", non_n)
+print("mask mismatches =", vis_mismatch)
+
+if (
+    obs_n != 396
+    or non_n != 84
+    or vis_mismatch != 0
+):
     fail("Visibility reproduction failed")
-observable_keys = set(map(tuple, vis.loc[vis["observability_status"] == "observable", ["feature_id", "image_name"]].itertuples(index=False, name=None)))
+
+observable_keys = set(
+    map(
+        tuple,
+        vis.loc[
+            vis["observability_status"] == "observable",
+            ["feature_id", "image_name"],
+        ].itertuples(index=False, name=None),
+    )
+)
 
 # B. Structural geometry input
 geom = pd.read_csv(DATA / "uav_validation" / "geometry" / "geometry_lcr_4530.csv")
@@ -121,11 +214,6 @@ print("median delta mm =", delta.median())
 print("max abs delta mm =", delta.abs().max())
 
 # D. Projection over the 396 mask-observable bindings
-camera_obj = json.loads((DATA / "uav_validation" / "cameras" / "cameras_12.json").read_text())
-cams = camera_obj["cameras"]
-if len(cams) != 12:
-    fail("Expected 12 cameras")
-
 geometry = {}
 for fid, d in geom.groupby("feature_id", sort=True):
     rows = []
@@ -302,7 +390,6 @@ print("p90 px =", x.quantile(0.90))
 print("min px =", x.min())
 print("max px =", x.max())
 
-design = pd.read_csv(DATA / "parameterization" / "feature_design_40.csv")
 feature_scale = (
     pair_calc.groupby("feature_id", as_index=False)["projected_width_px_median"]
     .median()
@@ -320,9 +407,11 @@ print(width_scale.to_string(index=False))
 
 # H. Explicit manuscript validation gates beyond view coverage
 #
-# View coverage was already recomputed from masks in section A.
-# Here we explicitly recompute geometric consistency, reference consistency
-# and lineage completeness. Identity closure follows immediately afterward.
+# View coverage and the exact 40 x 12 Cartesian feature-view coverage were
+# already verified from the released design catalog, camera set, manifest,
+# and masks in section A. Here we explicitly recompute geometric consistency,
+# reference consistency, and lineage completeness. Identity closure follows
+# immediately afterward.
 
 # Gate 2 — geometric consistency: materialized station width == prescribed width
 L_xyz = geom[
