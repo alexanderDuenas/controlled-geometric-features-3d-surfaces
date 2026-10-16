@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this reproducibility package, please cite this software and the associated MethodsX article."
 type: software
 title: "Controlled geometric features on 3D surfaces with constructed metric reference and auditable lineage — reproducibility package"
-version: 1.0.1
+version: 1.0.2
 repository-code: "https://github.com/alexanderDuenas/controlled-geometric-features-3d-surfaces"
 
 authors:

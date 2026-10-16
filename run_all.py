@@ -204,7 +204,7 @@ print("stations =", len(geom))
 print("L/C/R point records =", len(geom) * 3)
 
 # C. Frozen reference table
-ref = pd.read_csv(DATA / "uav_validation" / "reference" / "reference_consistency_40.csv")
+ref = pd.read_csv(DATA / "uav_validation" / "reference" / "reference_consistency_40.csv", float_precision="round_trip")
 delta = pd.to_numeric(ref["delta_mm"], errors="raise")
 if len(ref) != 40:
     fail("Reference population is not 40")
@@ -501,46 +501,37 @@ ref_calc["abs_delta_mm"] = (
     .abs()
 )
 
-ref_cmp = ref_calc.merge(
-    ref,
-    on="feature_id",
-    how="outer",
-    suffixes=("_calc", "_exp"),
-    indicator=True,
-)
-
-if (ref_cmp["_merge"] != "both").any():
-    fail(
-        "Reference consistency feature-key mismatch."
+def verify_g4_artifact(ref_calc, ref):
+    """Integridade exata do artefato, distinta do criterio cientifico G4."""
+    cols = ["prescribed_width_mm", "constructed_metric_reference_mm", "delta_mm", "abs_delta_mm"]
+    for label, table in (("computed", ref_calc), ("frozen", ref)):
+        if len(table) != 40 or table["feature_id"].astype(str).duplicated().any():
+            fail("G4: " + label + " has wrong feature population or duplicate IDs")
+        vals = table[cols].apply(pd.to_numeric, errors="raise").to_numpy(dtype=np.float64)
+        if not np.isfinite(vals).all():
+            fail("G4: " + label + " contains non-finite reference values")
+    merged = ref_calc.merge(
+        ref, on="feature_id", how="outer",
+        suffixes=("_calc", "_exp"), indicator=True, validate="one_to_one"
     )
+    if (merged["_merge"] != "both").any():
+        fail("G4: missing or extra feature IDs in reference artifact")
+    for col in cols:
+        a = merged[col + "_calc"].to_numpy(dtype=np.float64)
+        b = merged[col + "_exp"].to_numpy(dtype=np.float64)
+        if not np.array_equal(a, b):
+            fail("G4 artifact mismatch (exact float64 comparison): " + col)
+    # Checagem interna independente: nao tolerar delta com sinal invertido.
+    w_ref = ref["constructed_metric_reference_mm"].to_numpy(dtype=np.float64)
+    w_design = ref["prescribed_width_mm"].to_numpy(dtype=np.float64)
+    stored_delta = ref["delta_mm"].to_numpy(dtype=np.float64)
+    stored_abs = ref["abs_delta_mm"].to_numpy(dtype=np.float64)
+    if not np.array_equal(stored_delta, w_ref - w_design):
+        fail("G4: delta_mm must equal w_ref - prescribed_width_mm")
+    if not np.array_equal(stored_abs, np.abs(stored_delta)):
+        fail("G4: abs_delta_mm is not abs(delta_mm)")
 
-for col in [
-    "prescribed_width_mm",
-    "constructed_metric_reference_mm",
-    "delta_mm",
-    "abs_delta_mm",
-]:
-    a = pd.to_numeric(
-        ref_cmp[f"{col}_calc"],
-        errors="raise",
-    )
-
-    b = pd.to_numeric(
-        ref_cmp[f"{col}_exp"],
-        errors="raise",
-    )
-
-    if not np.allclose(
-        a,
-        b,
-        rtol=1e-11,
-        atol=1e-6,
-    ):
-        fail(
-            "Reference consistency mismatch in "
-            f"{col}"
-        )
-
+verify_g4_artifact(ref_calc, ref)
 if float(
     ref_calc["abs_delta_mm"].max()
 ) > 1e-6:

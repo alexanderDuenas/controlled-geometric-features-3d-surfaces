@@ -176,7 +176,7 @@ The five gates are internal validation of the packaged method execution. They do
 | Identity preservation | Persistent feature IDs close across design, materialized geometry, reference, visibility and expected projection populations. | Identity integrity, not geometric accuracy. |
 | Geometric consistency | Station-level materialized separation `||R-L||_2` agrees with prescribed width. | Internal materialization-consistency check; not an independent surface-accuracy test. |
 | Lineage completeness | Each feature closes from design through materialized geometry, reference population, 12 feature-view bindings and observable projected outputs. | Audits lineage completeness, not physical visibility truth. |
-| Reference consistency | The feature-level constructed metric reference derived from materialized station widths agrees with prescribed width and the frozen expected reference table. | Derived from the same materialized geometry; not an external metrological reference. |
+| Reference consistency | Maximum absolute deviation between constructed reference and prescribed width must not exceed 1e-6 mm. The 40 recomputed reference records must also match the frozen artifact, with delta_mm = w_ref - prescribed_width_mm. | Internal numerical consistency, not independent metrological accuracy. |
 | View coverage | All 480 frozen feature-view masks are reread and their observable/not-observable states are reproduced. | Reproduces frozen provider outputs; does not regenerate the historical masks. |
 
 Expected public-validation populations are:
@@ -199,7 +199,7 @@ Projected measurand scale is reported separately as additional characterization.
 
 ### Citation
 
-When using this package, cite the associated MethodsX article and the archived repository DOI once available. Repository citation metadata should be kept consistent with the final article metadata.
+Cite the archived DOI corresponding to the exact software release used and the associated MethodsX article when published. The DOI for v1.0.2 must be confirmed after archival in Zenodo.
 
 ### Licensing
 
